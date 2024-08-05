@@ -22,12 +22,14 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('plotly-dash/', include('django_plotly_dash.urls')),
     path('', include('zend_django.urls')),
     path('', include('app_reports.urls')),
     path('', include('app_favoritos.urls')),
     path('', include('app_valuacion_puestos.urls')),
     path('', include('app_tablero.urls')),
     path('', include('app_catalogo_remoto.urls')),
+    path('', include('app_timeseries_report.urls')),
 ]
 
 urlpatterns += static(

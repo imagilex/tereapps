@@ -1,0 +1,12 @@
+{% extends "zend_django/html/form.html" %}
+{% load i18n %}
+{% load op_helpers %}
+
+{% block extraafter %}
+<script type="text/javascript">
+    let btn = document.querySelector(`button[type="submit"]`);
+    btn.addEventListener("click", () => {
+        $(`#main-form`).submit();
+    });
+</script>
+{% endblock %}

@@ -22,5 +22,9 @@
   "catalogo_remoto": {
     "mnuopc_position": 3,
     "display_as_app": true
+  },
+  "timeseries_report": {
+    "mnuopc_position": 4,
+    "display_as_app": true
   }
 }

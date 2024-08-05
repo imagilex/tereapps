@@ -1,0 +1,161 @@
+{% extends "zend_django/html/html_struct.html" %}
+{% load i18n %}
+{% load op_helpers %}
+
+{% block content %}
+
+<a class="btn btn-outline-secondary" a href="{% url 'reportets_read' pk=object.pk %}">
+    <i class="fas fa-arrow-left"></i>
+    Volver al reporte
+    <i class="fas fa-arrow-left"></i>
+</a>
+
+<form method="post" autocomplete="off" enctype="multipart/form-data" id="main-form" action="">
+    {% csrf_token %}
+    <input type="hidden" value="filter" name="action" />
+    <div class="row">
+        <div class="form-group col-sm-2">
+            <label for="filtro-entidad">Entidad</label>
+            <select name="filtro-entidad" id="filtro-entidad" class="form-control">
+                <option value=""></option>
+                {% for opt in object.entidades %}
+                    <option value="{{ opt }}" {% if opt == filters.entidad %}selected="selected"{% endif %}>
+                        {{ opt }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-sm-4">
+            <label for="filtro-concepto">Concepto</label>
+            <select name="filtro-concepto" id="filtro-concepto" class="form-control">
+                <option value=""></option>
+                {% for opt in object.conceptos %}
+                    <option value="{{ opt }}" {% if opt == filters.concepto %}selected="selected"{% endif %}>
+                        {{ opt }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-sm-2">
+            <label for="filtro-tipo">Tipo</label>
+            <select name="filtro-tipo" id="filtro-tipo" class="form-control">
+                <option value=""></option>
+                {% for opt in object.tipos %}
+                    <option value="{{ opt }}" {% if opt == filters.tipo %}selected="selected"{% endif %}>
+                        {{ opt }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-sm-4">
+            <label for="filtro-periodo">Periodo</label>
+            <select name="filtro-periodo" id="filtro-periodo" class="form-control">
+                <option value=""></option>
+                {% for opt in object.periodos %}
+                    <option value="{{ opt|date:'Y/m/d' }}" {% if opt|date:'Y/m/d' == filters.periodo %}selected="selected"{% endif %}>
+                        {{ opt|date:'F, Y' }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <button type="submit" class="btn btn-outline-secondary" id="btn-filter" title="Filtrar Registros">
+                <i class="fas fa-filter"></i> Filtrar Registros
+            </button>
+        </div>
+    </div>
+</form>
+
+{% if data %}
+<form method="post" autocomplete="off" enctype="multipart/form-data" id="main-form" action="">
+    {% csrf_token %}
+    <input type="hidden" name="filtro-entidad" value="{{ filters.entidad }}" />
+    <input type="hidden" name="filtro-concepto" value="{{ filters.concepto }}" />
+    <input type="hidden" name="filtro-tipo" value="{{ filters.tipo }}" />
+    <input type="hidden" name="filtro-periodo" value="{{ filters.periodo }}" />
+    <input type="hidden" value="update" name="action" id="action" />
+    <div class="row">
+        <div class="col-sm-12">
+
+            <table id="data-grid-report" class="table_zd table-sm table-responsive">
+                <thead>
+                    <tr>
+                        <th class="d-none"></th>
+                        <th data-dgr-col-sorteable="no" data-dgr-col-hiddenable="no" data-dgr-col-link-detail="no"
+                            data-dgr-col-filterable="no" data-dgr-col-datatype="string">
+                            Entidad
+                        </th>
+                        <th data-dgr-col-sorteable="no" data-dgr-col-hiddenable="no" data-dgr-col-link-detail="no"
+                            data-dgr-col-filterable="no" data-dgr-col-datatype="string">
+                            Concepto
+                        </th>
+                        <th data-dgr-col-sorteable="no" data-dgr-col-hiddenable="no" data-dgr-col-link-detail="no"
+                            data-dgr-col-filterable="no" data-dgr-col-datatype="string">
+                            Tipo
+                        </th>
+                        <th data-dgr-col-sorteable="no" data-dgr-col-hiddenable="no" data-dgr-col-link-detail="no"
+                            data-dgr-col-filterable="no" data-dgr-col-datatype="string">
+                            Periodo
+                        </th>
+                        <th data-dgr-col-sorteable="no" data-dgr-col-hiddenable="no" data-dgr-col-link-detail="no"
+                            data-dgr-col-filterable="no" data-dgr-col-datatype="string">
+                            Valor
+                        </th>
+                        <th class="text-center">
+                            <div class="d-inline-block" title="Filtros">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" role="button" data-toggle="collapse" data-target="#filter-row" aria-expanded="false" aria-controls="filter-row">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="data-tbl">
+                    {% for reg in data %}
+                        <tr data-dgr-object-id="{{ reg.pk }}">
+                            <td class="text-center d-none">
+                                <input type="checkbox" class="form-check-inline massive-operations" value="{{ reg.pk }}" name="pkdelete[]" />
+                                <input type="hidden" name="pk[]" value="{{ reg.pk }}" />
+                            </td>
+                            <td data-dgr-raw-sort-value="" data-dgr-raw-filter-value="">
+                                <input name="entidad[]" type="text" class="form-control" value="{{ reg.entidad }}" />
+                            </td>
+                            <td class="" data-dgr-raw-sort-value="" data-dgr-raw-filter-value="">
+                                <input name="concepto[]" type="text" class="form-control" value="{{ reg.concepto }}" />
+                            </td>
+                            <td class="" data-dgr-raw-sort-value="" data-dgr-raw-filter-value="">
+                                <input name="tipo[]" type="text" class="form-control" value="{{ reg.tipo }}" />
+                            </td>
+                            <td class="" data-dgr-raw-sort-value="" data-dgr-raw-filter-value="">
+                                <input name="periodo[]" type="month" class="form-control" value="{{ reg.periodo|date:'Y-m' }}" />
+                            </td>
+                            <td class="" data-dgr-raw-sort-value="" data-dgr-raw-filter-value="">
+                                <input name="valor[]" type="text" class="form-control" value="{{ reg.valor }}" />
+                            </td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1">
+            <button type="submit" class="btn btn-outline-secondary" id="btn-save" title="{% action_label 'save' %}">
+                {% action_icon 'save' %}
+            </button>
+        </div>
+        <div class="col-sm-1">
+            <button onclick="$(`#action`).attr('value', 'delete');" type="submit" class="btn btn-outline-secondary" id="btn-delete" title="{% crud_label 'delete' %}">
+                {% crud_icon 'delete' %}
+            </button>
+        </div>
+    </div>
+</form>
+{% endif %}
+
+{% endblock %}

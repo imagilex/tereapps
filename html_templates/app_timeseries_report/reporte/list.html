@@ -1,0 +1,98 @@
+{% extends "zend_django/html/html_struct.html" %}
+{% load i18n %}
+{% load op_helpers %}
+
+{% block content %}
+
+<script type="text/javascript">
+    let url_update = "{% url 'reportets_update' pk='__recordid__' %}";
+    let url_delete = "{% url 'reportets_delete' pk='__recordid__' %}";
+    let url_read = "{% url 'reportets_read' pk='__recordid__' %}";
+</script>
+
+<div class="btn-group d-none" role="group" aria-label="Acciones">
+    {% if perms.app_timeseries_report.add_reportets %}
+    <a data-action="create" href="{% url 'reportets_create' %}" class="btn btn-outline-secondary" role="button" title="{% crud_label 'create' %}">
+        {% crud_icon 'create' %}
+    </a>
+    {% endif %}
+    {% if perms.app_timeseries_report.change_reportets %}
+    <button type="button" onclick="dataGridResultsGlobals.update_many()" data-action="update" class="btn btn-outline-secondary" role="button" title="{% crud_label 'update' %}">
+            {% crud_icon 'update' %}
+    </button>
+    {% endif %}
+    {% if perms.app_timeseries_report.delete_reportets %}
+    <button type="button" data-action="delete" onclick="dataGridResultsGlobals.delete_many()" class="btn btn-outline-secondary" role="button" title="{% crud_label 'delete' %}">
+        {% crud_icon 'delete' %}
+    </button>
+    {% endif %}
+    <button type="button" data-action="toggle-cols" onclick="dataGridResultsGlobals.show_toggler_cols()" class="btn btn-outline-secondary" role="button" title="Mostrar/Ocultar Columnas">
+        {% crud_icon 'read' %}
+    </button>
+</div>
+<div class="btn-group d-none" role="group" aria-label="Filtrado-Filas">
+    <button type="button" onclick="dataGridResultsGlobals.filtrar_filas()" class="btn btn-outline-secondary" role="button" title="Filtrar Filas">
+        <i class="fas fa-filter"></i>
+    </button>
+    <button type="button" onclick="dataGridResultsGlobals.restaurar_filtrado_filas()" class="btn btn-outline-secondary" role="button" title="Borrar Filtro en Filas">
+        <i class="fas fa-trash-restore"></i>
+    </button>
+</div>
+
+<table id="data-grid-report" class="table_zd table-sm table-responsive">
+    <thead>
+        <tr>
+            <th class="d-none"></th>
+            <th data-dgr-col-sorteable="yes" data-dgr-col-hiddenable="no" data-dgr-col-link-detail="yes"
+                data-dgr-col-filterable="yes" data-dgr-col-datatype="string">
+                Reporte
+            </th>
+            <th data-dgr-col-sorteable="yes" data-dgr-col-hiddenable="yes" data-dgr-col-link-detail="no"
+                data-dgr-col-filterable="yes" data-dgr-col-datatype="numeric">
+                Entidades
+            </th>
+            <th data-dgr-col-sorteable="yes" data-dgr-col-hiddenable="yes" data-dgr-col-link-detail="no"
+                data-dgr-col-filterable="yes" data-dgr-col-datatype="numeric">
+                Conceptos
+            </th>
+            <th data-dgr-col-sorteable="yes" data-dgr-col-hiddenable="yes" data-dgr-col-link-detail="no"
+                data-dgr-col-filterable="yes" data-dgr-col-datatype="string">
+                Periodos
+            </th>
+            <th class="text-center">
+                <div class="d-inline-block" title="Filtros">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" role="button" data-toggle="collapse" data-target="#filter-row" aria-expanded="false" aria-controls="filter-row">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody id="data-tbl">
+        {% for reg in data %}
+            <tr data-dgr-object-id="{{ reg.pk }}">
+                <td class="text-center d-none">
+                    <!--<input type="checkbox" class="action-on-reg" data-recordid="{{ reg.pk }}" data-toggle="toggle" data-size="xs" data-onstyle="secondary" data-style="ios" data-on=" " data-off=" " />-->
+                    <input type="checkbox" class="form-check-inline massive-operations" data-dgr-object-id="{{ reg.pk }}" />
+                </td>
+                <td data-dgr-raw-sort-value="{{ reg|lower }}" data-dgr-raw-filter-value="{{ reg|lower }}">
+                    {{ reg }}
+                </td>
+                <td class="text-right" data-dgr-raw-sort-value="{{ reg.entidades|length }}" data-dgr-raw-filter-value="{{ reg.etiqueta|length }}">
+                    {{ reg.entidades|length }}
+                </td>
+                <td class="text-right" data-dgr-raw-sort-value="{{ reg.conceptos|length }}" data-dgr-raw-filter-value="{{ reg.url|length }}">
+                    {{ reg.conceptos|length }}
+                </td>
+                <td class="text-right" data-dgr-raw-sort-value="{{ reg.periodos|length }}" data-dgr-raw-filter-value="{{ reg.url|length }}">
+                    {{ reg.periodos|length }}
+                </td>
+                <td></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% include 'zend_django/datagridresults/handlebars_tpls.html' %}
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "zend_django/html/html_struct.html" %}
+{% load i18n %}
+{% load op_helpers %}
+{%load plotly_dash%}
+
+{% block content %}
+
+{% plotly_header %}
+{% plotly_direct name=dp_name %}
+{% plotly_footer %}
+
+{% endblock %}

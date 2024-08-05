@@ -1,0 +1,52 @@
+{% extends 'zend_django/html/form.html' %}
+
+{%  block extraafter %}
+
+<ul class="nav nav-tabs" id="TabsReport" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="entidades-tab" data-toggle="tab" data-target="#entidades-tab-content" type="button" role="tab" aria-controls="entidades" aria-selected="true">
+            Entidades
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="conceptos-tab" data-toggle="tab" data-target="#conceptos-tab-content" type="button" role="tab" aria-controls="conceptos" aria-selected="false">
+            Conceptos
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="periodos-tab" data-toggle="tab" data-target="#periodos-tab-content" type="button" role="tab" aria-controls="periodos" aria-selected="false">
+            Periodos
+        </button>
+    </li>
+</ul>
+<div class="tab-content pt-3" id="TabsReportContent">
+    <div class="tab-pane fade show active" id="entidades-tab-content" role="tabpanel" aria-labelledby="entidades-tab">
+        <div class="row row-cols-6">
+            {% for item in object.entidades %}
+            <div class="col">
+                {{ item }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="tab-pane fade" id="conceptos-tab-content" role="tabpanel" aria-labelledby="conceptos-tab">
+        <div class="row row-cols-6">
+            {% for item in object.conceptos %}
+            <div class="col">
+                {{ item }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="tab-pane fade" id="periodos-tab-content" role="tabpanel" aria-labelledby="periodos-tab">
+        <div class="row row-cols-6">
+            {% for item in object.periodos %}
+            <div class="col">
+                {{ item|date:'F, Y' }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
