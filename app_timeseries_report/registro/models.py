@@ -19,3 +19,11 @@ class RegistroTS(models.Model):
         choices=TIPO_REGISTRO, default=TIPO_REGISTRO[0][0])
     periodo = models.DateField()
     valor = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = [
+            "entidad",
+            "concepto",
+            "tipo",
+            "periodo",
+        ]

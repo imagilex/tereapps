@@ -41,15 +41,19 @@ MSGS_ALERT = [
 
 
 def update_report(reporte, rows):
-    headers = list(rows[0].keys())
+    headers = [k for k in rows[0].keys() if k and str(k).strip()]
     desc_field = headers[0]
     periodos = headers[1:]
     pers = dict()
     for periodo in periodos:
         pers[periodo] = date(int(periodo[0:4]), int(periodo[5:7]), 1)
     for i, row in enumerate(rows):
-        entidad, concepto, tipo = row[desc_field].replace(
-            '--', '-@@').split('-')
+        try:
+            entidad, concepto, tipo = row[desc_field].replace(
+                '--', '-@@').split('-')
+        except ValueError as ex:
+            print(f"EXCEPCION: {ex} EN {i =} {row =}")
+            continue
         concepto = concepto.replace('@@', '-')
         tipo = tipo.upper()
         entidad = entidad.upper()

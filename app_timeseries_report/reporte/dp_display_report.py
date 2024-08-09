@@ -16,7 +16,7 @@ pk_reportets = dp_config.pk_reportets
 reportets = ReporteTS.objects.get(pk=pk_reportets)
 df = pd.DataFrame(list(reportets.registros.all().values()))
 
-app = DjangoDash('DP_Display_ReporteTS')
+app = DjangoDash('DP_Display_ReporteTS', update_title='Actualizando gráfica')
 
 app.layout = html.Div([
     html.Div([
