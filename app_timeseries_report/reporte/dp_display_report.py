@@ -56,9 +56,9 @@ app.layout = html.Div([
 
 @app.callback(
     Output(component_id='graph', component_property='figure'),
-    Input(component_id='filter-concepto', component_property='value'),
+    [Input(component_id='filter-concepto', component_property='value'),
     Input(component_id='mostar-entidades', component_property='value'),
-    Input(component_id='multi-graph', component_property='value'),
+    Input(component_id='multi-graph', component_property='value')],
     background=True
 )
 def update_mostar_entidades_value(conceptos, entidades, multiple):
