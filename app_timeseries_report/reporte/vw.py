@@ -10,6 +10,8 @@ from django.urls.exceptions import NoReverseMatch
 from django.views import View
 from openpyxl import load_workbook
 from os import remove
+from sys import modules
+import importlib
 
 from zend_django.parametros_models import ParametroUsuario
 from zend_django.templatetags.op_helpers import crud_icon
@@ -145,7 +147,7 @@ class Display(View):
             'footer': False,
             'read_only': True,
             'alertas': [],
-            'req_chart': False,
+            'req_chart': True,
             'search_value': None,
             'tereapp': self.tereapp,
             'object': obj,
