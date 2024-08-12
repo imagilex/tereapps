@@ -1,12 +1,57 @@
 {% extends "zend_django/html/html_struct.html" %}
 {% load i18n %}
 {% load op_helpers %}
-{%load plotly_dash%}
+{% load plotly_dash %}
+{% load static %}
 
 {% block content %}
 
 {% plotly_header %}
 {% plotly_direct name=dp_name %}
 {% plotly_footer %}
+
+<hr />
+<!--
+<script type="text/javascript">
+    let url_css = "{% static 'api/css' %}/MultiSelect.css";
+    let url_js = "{% static 'api/js' %}/MultiSelect.js";
+    let concepto_predefinido = '{{ object.concepto_predefinido }}';
+</script>
+
+<div>
+    <div class="row">
+        <div class="col-sm-8">
+            <label>Concepto:</label>
+            <select id="data-concepto" name="data-concepto[]" data-placeholder="Conceptos" multiple="multiple">
+                {% for opt in object.conceptos %}
+                    <option value="{{ opt }}" {% if opt == object.concepto_predefinido %}selected="selected"{% endif %}>{{ opt }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Entidades:</label>
+            {% for opt in object.entidades %}
+                <br />
+                <label>
+                    <input type="checkbox" value="{{ opt }}" name="data-entidad[]" checked="checked" />
+                    {{ opt }}
+                </label>
+            {% endfor %}
+            <hr />
+            <label>
+                <input type="checkbox" value="independiente" name="data-multiple" id="data-multiple" checked="checked" />
+                Gráficas independientes
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div id="data-graph">
+
+            </div>
+        </div>
+    </div>
+</div>
+-->
 
 {% endblock %}
