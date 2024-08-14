@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django.contrib.humanize',
     'django_extensions',
-    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
 
     'zend_django',
     'app_reports',
@@ -70,7 +69,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_plotly_dash.middleware.BaseMiddleware',
 ]
 
 ROOT_URLCONF = 'main_app_tool.urls'
@@ -170,4 +168,3 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 DATABASE_NAME = 'tereapps'
-X_FRAME_OPTIONS = 'SAMEORIGIN'
