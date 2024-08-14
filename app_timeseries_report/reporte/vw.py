@@ -1,6 +1,7 @@
 import csv
 import io
 import requests
+import json
 
 from django.db.models import Q
 from django.http import HttpResponseRedirect
@@ -25,8 +26,6 @@ from zend_django.views import GenericUpdate
 
 from .forms import frmMain as base_form
 from .models import ReporteTS as main_model
-
-import app_timeseries_report.reporte.dp_config as dp_config
 
 
 def template_base_path(file):
@@ -138,8 +137,10 @@ class Display(View):
             return HttpResponseRedirect(reverse('item_no_encontrado'))
         obj = self.main_data_model.objects.get(pk=pk)
 
-        dp_config.pk_reportets = pk
-        from . import dp_display_report
+        data = list()
+        for reg in obj.registros.all().values():
+            reg['periodo'] = reg['periodo'].strftime("%Y-%m")
+            data.append(reg)
 
         return render(request, self.html_template, {
             'titulo': obj,
@@ -153,4 +154,5 @@ class Display(View):
             'object': obj,
             'withoutBtnSave': True,
             'dp_name': 'DP_Display_ReporteTS',
+            'data': data,
         })
