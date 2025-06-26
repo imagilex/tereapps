@@ -61,19 +61,27 @@ forms = {
         <thead>
             <tr>
                 <td></td>
-                <td></td>
+                <td class="text-right">
+                    <button type="button" class="btn btn-outline-secondary d-none" id="btn-save-calificaciones" title="Guardar Calificaciones" onclick="autoUpdateCalificacion()">
+                        <i class="far fa-save" aria-hidden="true"></i>
+                    </button>
+                </td>
                 <td id="cell_ponderacion_total" class="text-right">
                     <strong>{{ object.ponderacion_total|floatformat:0 }}</strong>
                 </td>
                 <td id="cell_ponderacion_en_pesos" class="text-right">
                     <strong>$ {{ object.ponderacion_total_en_pesos|floatformat:0 }}</strong>
                 </td>
+                <td id="cell_ponderacion_en_pesos_mensual" class="text-right">
+                    <strong>$ {{ object.ponderacion_total_en_pesos_diario|floatformat:0 }}</strong>
+                </td>
             </tr>
             <tr>
                 <th>Factor</th>
                 <th>Calificación</th>
                 <th>Puntos</th>
-                <th>Pesos</th>
+                <th>Salario Mensual</th>
+                <th>Salario Diario</th>
             </tr>
         </thead>
         <tbody>
@@ -86,7 +94,7 @@ forms = {
                         {% if object.niveles_ponderacion.all %}
                             {% for p in object.niveles_ponderacion.all %}
                                 {% if factor.pk == p.nivel.factor.pk %}
-                                    <input data-factorid="{{ factor.pk }}" name="txt_factor_{{ factor.pk }}" id="txt_factor_{{ factor.pk }}" type="text" class="form-control" value="{{ p.nivel.nivel_multiplicador }}" min="{{ factor.min_nivel.nivel_multiplicador }}" max="{{ factor.max_nivel.nivel_multiplicador }}" onkeypress="updateCalificacion(event, $(this))" />
+                                    <input data-factorid="{{ factor.pk }}" name="txt_factor_{{ factor.pk }}" id="txt_factor_{{ factor.pk }}" type="text" class="form-control" value="{{ p.nivel.nivel_multiplicador }}" min="{{ factor.min_nivel.nivel_multiplicador }}" max="{{ factor.max_nivel.nivel_multiplicador }}" onkeypress="updateCalificacion(event, $(this))" onchange="check_calificacion_value($(this))" />
                                 {% endif %}
                             {% endfor %}
                         {% else %}
@@ -100,7 +108,10 @@ forms = {
                                     {{ pond }}
                                 </td>
                                 <td id="cell_pond_en_pesos_{{ factor.pk }}" class="text-right">
-                                    {{ pond.ponderacion_en_pesos|floatformat:0|intcomma }}
+                                    $ {{ pond.ponderacion_en_pesos|floatformat:0|intcomma }}
+                                </td>
+                                <td id="cell_pond_en_pesos_{{ factor.pk }}_sd" class="text-right">
+                                    $ {{ pond.ponderacion_en_pesos_diario|floatformat:0|intcomma }}
                                 </td>
                             {% endif %}
                         {% endfor %}
@@ -135,7 +146,8 @@ forms = {
         <tr>
             <th>Nivel</th>
             <th>Puntos</th>
-            <th>Pesos</th>
+            <th>Salario Mensual</th>
+            <th>Salario Diario</th>
         </tr>
     </thead>
     <tbody>
@@ -144,6 +156,7 @@ forms = {
                 <td class="text-center">{{ nivel.nivel.posicion }}</td>
                 <td class="text-right">{{ nivel.puntos|floatformat:2|intcomma }}</td>
                 <td class="text-right">$ {{ nivel.pesos|floatformat:2|intcomma }}</td>
+                <td class="text-right">$ {{ nivel.pesos_diario|floatformat:2|intcomma }}</td>
             </tr>
         {% endfor %}
     </tbody>
@@ -177,22 +190,30 @@ forms = {
 
     {% endif %}
 
-    let updateCalificacion = (event, txtbox) => {
-        if([13].indexOf(event.keyCode) == -1) {
-            return false;
-        }
+    let check_calificacion_value = txtbox => {
         let vmin = parseInt(txtbox.attr('min'));
         let vmax = parseInt(txtbox.attr('max'));
         let valor = parseInt(txtbox.val());
-        let current_row = null;
-        let current_factorid = parseInt(parseInt(txtbox.data('factorid')));
-        let sum_ptos = 0;
-        let sum_mny = 0;
         if(!(vmin <= valor && valor <= vmax)) {
             alert(`El valor debe ser entre ${vmin} y ${vmax}`);
             txtbox.select();
             return false;
         }
+        return true;
+    }
+
+    let updateCalificacion = (event, txtbox) => {
+        return false;
+        if([13].indexOf(event.keyCode) == -1) {
+            return false;
+        }
+        if(!check_calificacion_value(txtbox)) {
+            return false;
+        }
+        let current_row = null;
+        let current_factorid = parseInt(parseInt(txtbox.data('factorid')));
+        let sum_ptos = 0;
+        let sum_mny = 0;
         $('#califaction').val('autosave');
         $.post(window.location.href, $("#grading-frm").serialize()).fail(function(result){console.log(result.responseText)});
         let txtinputs = $('#grading-frm td input.form-control');
@@ -220,6 +241,18 @@ forms = {
     }
 
     let factores = {{ factores_json|safe }};
+
+    Array.from(document.querySelectorAll(`#grading-frm table input[type="text"]`)).forEach(item=>item.disabled=true);
+
+    let abre_edicion_calificaciones = () => {
+        let txtcalificaciones = $(`#grading-frm table input[type="text"]`);
+        txtcalificaciones.each((idx, item)=>{
+            item.disabled=false;
+        });
+        $(`#btn-save-calificaciones`).removeClass('d-none');
+        txtcalificaciones[0].focus();
+        txtcalificaciones[0].select();
+    }
 
 </script>
 

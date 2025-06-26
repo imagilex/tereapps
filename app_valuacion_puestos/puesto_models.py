@@ -70,6 +70,10 @@ class Puesto(models.Model):
         return self.__ponderacion_total_en_pesos__
 
     @property
+    def ponderacion_total_en_pesos_diario(self) -> float:
+        return self.ponderacion_total_en_pesos / 30
+
+    @property
     def tabuladores(self) -> list:
         if not self.__tabuladores__:
             tabs = []
@@ -79,6 +83,8 @@ class Puesto(models.Model):
                     'puntos': self.ponderacion_total *
                     float(nivel.porcentaje) / 100,
                     'pesos': self.ponderacion_total_en_pesos *
+                    float(nivel.porcentaje) / 100,
+                    'pesos_diario': self.ponderacion_total_en_pesos_diario *
                     float(nivel.porcentaje) / 100,
                 })
             self.__tabuladores__ = tabs

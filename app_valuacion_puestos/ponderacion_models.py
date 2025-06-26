@@ -37,3 +37,7 @@ class Ponderacion(models.Model):
         if not self.__ponderacion_en_pesos__:
             self.__ponderacion_en_pesos__ = self.nivel.ponderacion_en_pesos
         return self.__ponderacion_en_pesos__
+
+    @property
+    def ponderacion_en_pesos_diario(self) -> float:
+        return self.ponderacion_en_pesos / 30

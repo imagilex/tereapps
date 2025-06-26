@@ -71,6 +71,11 @@ class Read(GenericRead):
             instance=obj, initial={'ponderacion_total': obj.ponderacion_total})
         toolbar = GenerateReadCRUDToolbar(
             request, self.model_name, obj, self.main_data_model)
+        toolbar.append({
+            'type': 'button',
+            'label': '<i class="far fa-edit" aria-hidden="true"></i> Calificación',
+            'title': 'Actualizar Calificación de Factores', 'onclick': 'abre_edicion_calificaciones()',
+        })
         autosaved = None
         if obj.evaluaciones.all().count() > 0:
             autosaved = obj.evaluaciones.filter(nombre="autosave").first()
