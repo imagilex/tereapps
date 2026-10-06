@@ -151,20 +151,19 @@ LOGIN_URL = 'session_login'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-if DEBUG is False:
-    STATIC_ROOT = os.path.join('/home/#USER#/public_html/', 'static/')
-    MEDIA_ROOT = os.path.join('/home/#USER#/public_html/', 'media/')
-    # STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-else:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'files/static')
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'files/media')
+STATIC_URL = ms.STATIC_URL
+STATIC_ROOT = ms.STATIC_ROOT
+MEDIA_URL = ms.MEDIA_URL
+MEDIA_ROOT = ms.MEDIA_ROOT
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 DATABASE_NAME = 'tereapps'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+SECURE_SSL_REDIRECT = False  # Dejar en False; Apache gestiona el certificado SSL
